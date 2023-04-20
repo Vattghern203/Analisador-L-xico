@@ -1,37 +1,84 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    COLON
+    COMMA
+    ENQUANTO
+    ESCREVA
+    INTEIRO
+    LEIA
+    NOT
+    PARA
+    REAL
+    SE
+    SENAO
+
 Grammar
 
 Rule 0     S' -> expression
 Rule 1     expression -> term PLUS term
 Rule 2     expression -> term MINUS term
-Rule 3     expression -> term
-Rule 4     term -> factor TIMES factor
-Rule 5     term -> factor DIVIDE factor
-Rule 6     term -> factor
-Rule 7     factor -> NUMBER
-Rule 8     factor -> NAME
-Rule 9     factor -> PLUS factor
-Rule 10    factor -> MINUS factor
-Rule 11    factor -> LPAREN expression RPAREN
+Rule 3     expression -> term TIMES term
+Rule 4     expression -> term DIVIDE term
+Rule 5     expression -> term LT term
+Rule 6     expression -> term GT term
+Rule 7     expression -> term LE term
+Rule 8     expression -> term GE term
+Rule 9     expression -> term NE term
+Rule 10    expression -> term AND term
+Rule 11    expression -> term OR term
+Rule 12    expression -> term
+Rule 13    term -> factor TIMES factor
+Rule 14    term -> factor DIVIDE factor
+Rule 15    term -> factor
+Rule 16    factor -> NUMBER
+Rule 17    factor -> NAME
+Rule 18    factor -> PLUS factor
+Rule 19    factor -> MINUS factor
+Rule 20    factor -> LPAREN expression RPAREN
+Rule 21    factor -> CADEIA_CAR
+Rule 22    factor -> EQUALS
+Rule 23    factor -> TIPO
 
 Terminals, with rules where they appear
 
-DIVIDE               : 5
-LPAREN               : 11
-MINUS                : 2 10
-NAME                 : 8
-NUMBER               : 7
-PLUS                 : 1 9
-RPAREN               : 11
-TIMES                : 4
+AND                  : 10
+CADEIA_CAR           : 21
+COLON                : 
+COMMA                : 
+DIVIDE               : 4 14
+ENQUANTO             : 
+EQUALS               : 22
+ESCREVA              : 
+GE                   : 8
+GT                   : 6
+INTEIRO              : 
+LE                   : 7
+LEIA                 : 
+LPAREN               : 20
+LT                   : 5
+MINUS                : 2 19
+NAME                 : 17
+NE                   : 9
+NOT                  : 
+NUMBER               : 16
+OR                   : 11
+PARA                 : 
+PLUS                 : 1 18
+REAL                 : 
+RPAREN               : 20
+SE                   : 
+SENAO                : 
+TIMES                : 3 13
+TIPO                 : 23
 error                : 
 
 Nonterminals, with rules where they appear
 
-expression           : 11 0
-factor               : 4 4 5 5 6 9 10
-term                 : 1 1 2 2 3
+expression           : 20 0
+factor               : 13 13 14 14 15 18 19
+term                 : 1 1 2 2 3 3 4 4 5 5 6 6 7 7 8 8 9 9 10 10 11 11 12
 
 Parsing method: LALR
 
@@ -40,21 +87,36 @@ state 0
     (0) S' -> . expression
     (1) expression -> . term PLUS term
     (2) expression -> . term MINUS term
-    (3) expression -> . term
-    (4) term -> . factor TIMES factor
-    (5) term -> . factor DIVIDE factor
-    (6) term -> . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (3) expression -> . term TIMES term
+    (4) expression -> . term DIVIDE term
+    (5) expression -> . term LT term
+    (6) expression -> . term GT term
+    (7) expression -> . term LE term
+    (8) expression -> . term GE term
+    (9) expression -> . term NE term
+    (10) expression -> . term AND term
+    (11) expression -> . term OR term
+    (12) expression -> . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
     NUMBER          shift and go to state 6
     NAME            shift and go to state 7
     PLUS            shift and go to state 3
     MINUS           shift and go to state 4
     LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
     expression                     shift and go to state 1
     term                           shift and go to state 2
@@ -70,219 +132,628 @@ state 2
 
     (1) expression -> term . PLUS term
     (2) expression -> term . MINUS term
-    (3) expression -> term .
+    (3) expression -> term . TIMES term
+    (4) expression -> term . DIVIDE term
+    (5) expression -> term . LT term
+    (6) expression -> term . GT term
+    (7) expression -> term . LE term
+    (8) expression -> term . GE term
+    (9) expression -> term . NE term
+    (10) expression -> term . AND term
+    (11) expression -> term . OR term
+    (12) expression -> term .
 
-    PLUS            shift and go to state 9
-    MINUS           shift and go to state 10
-    $end            reduce using rule 3 (expression -> term .)
-    RPAREN          reduce using rule 3 (expression -> term .)
+    PLUS            shift and go to state 12
+    MINUS           shift and go to state 13
+    TIMES           shift and go to state 14
+    DIVIDE          shift and go to state 15
+    LT              shift and go to state 16
+    GT              shift and go to state 17
+    LE              shift and go to state 18
+    GE              shift and go to state 19
+    NE              shift and go to state 20
+    AND             shift and go to state 21
+    OR              shift and go to state 22
+    $end            reduce using rule 12 (expression -> term .)
+    RPAREN          reduce using rule 12 (expression -> term .)
 
 
 state 3
 
-    (9) factor -> PLUS . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (18) factor -> PLUS . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
     NUMBER          shift and go to state 6
     NAME            shift and go to state 7
     PLUS            shift and go to state 3
     MINUS           shift and go to state 4
     LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
-    factor                         shift and go to state 11
+    factor                         shift and go to state 23
 
 state 4
 
-    (10) factor -> MINUS . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (19) factor -> MINUS . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
     NUMBER          shift and go to state 6
     NAME            shift and go to state 7
     PLUS            shift and go to state 3
     MINUS           shift and go to state 4
     LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
-    factor                         shift and go to state 12
+    factor                         shift and go to state 24
 
 state 5
 
-    (4) term -> factor . TIMES factor
-    (5) term -> factor . DIVIDE factor
-    (6) term -> factor .
+    (13) term -> factor . TIMES factor
+    (14) term -> factor . DIVIDE factor
+    (15) term -> factor .
 
-    TIMES           shift and go to state 13
-    DIVIDE          shift and go to state 14
-    PLUS            reduce using rule 6 (term -> factor .)
-    MINUS           reduce using rule 6 (term -> factor .)
-    $end            reduce using rule 6 (term -> factor .)
-    RPAREN          reduce using rule 6 (term -> factor .)
+  ! shift/reduce conflict for TIMES resolved as shift
+  ! shift/reduce conflict for DIVIDE resolved as shift
+    TIMES           shift and go to state 25
+    DIVIDE          shift and go to state 26
+    PLUS            reduce using rule 15 (term -> factor .)
+    MINUS           reduce using rule 15 (term -> factor .)
+    LT              reduce using rule 15 (term -> factor .)
+    GT              reduce using rule 15 (term -> factor .)
+    LE              reduce using rule 15 (term -> factor .)
+    GE              reduce using rule 15 (term -> factor .)
+    NE              reduce using rule 15 (term -> factor .)
+    AND             reduce using rule 15 (term -> factor .)
+    OR              reduce using rule 15 (term -> factor .)
+    $end            reduce using rule 15 (term -> factor .)
+    RPAREN          reduce using rule 15 (term -> factor .)
+
+  ! TIMES           [ reduce using rule 15 (term -> factor .) ]
+  ! DIVIDE          [ reduce using rule 15 (term -> factor .) ]
 
 
 state 6
 
-    (7) factor -> NUMBER .
+    (16) factor -> NUMBER .
 
-    TIMES           reduce using rule 7 (factor -> NUMBER .)
-    DIVIDE          reduce using rule 7 (factor -> NUMBER .)
-    PLUS            reduce using rule 7 (factor -> NUMBER .)
-    MINUS           reduce using rule 7 (factor -> NUMBER .)
-    $end            reduce using rule 7 (factor -> NUMBER .)
-    RPAREN          reduce using rule 7 (factor -> NUMBER .)
+    TIMES           reduce using rule 16 (factor -> NUMBER .)
+    DIVIDE          reduce using rule 16 (factor -> NUMBER .)
+    PLUS            reduce using rule 16 (factor -> NUMBER .)
+    MINUS           reduce using rule 16 (factor -> NUMBER .)
+    LT              reduce using rule 16 (factor -> NUMBER .)
+    GT              reduce using rule 16 (factor -> NUMBER .)
+    LE              reduce using rule 16 (factor -> NUMBER .)
+    GE              reduce using rule 16 (factor -> NUMBER .)
+    NE              reduce using rule 16 (factor -> NUMBER .)
+    AND             reduce using rule 16 (factor -> NUMBER .)
+    OR              reduce using rule 16 (factor -> NUMBER .)
+    $end            reduce using rule 16 (factor -> NUMBER .)
+    RPAREN          reduce using rule 16 (factor -> NUMBER .)
 
 
 state 7
 
-    (8) factor -> NAME .
+    (17) factor -> NAME .
 
-    TIMES           reduce using rule 8 (factor -> NAME .)
-    DIVIDE          reduce using rule 8 (factor -> NAME .)
-    PLUS            reduce using rule 8 (factor -> NAME .)
-    MINUS           reduce using rule 8 (factor -> NAME .)
-    $end            reduce using rule 8 (factor -> NAME .)
-    RPAREN          reduce using rule 8 (factor -> NAME .)
+    TIMES           reduce using rule 17 (factor -> NAME .)
+    DIVIDE          reduce using rule 17 (factor -> NAME .)
+    PLUS            reduce using rule 17 (factor -> NAME .)
+    MINUS           reduce using rule 17 (factor -> NAME .)
+    LT              reduce using rule 17 (factor -> NAME .)
+    GT              reduce using rule 17 (factor -> NAME .)
+    LE              reduce using rule 17 (factor -> NAME .)
+    GE              reduce using rule 17 (factor -> NAME .)
+    NE              reduce using rule 17 (factor -> NAME .)
+    AND             reduce using rule 17 (factor -> NAME .)
+    OR              reduce using rule 17 (factor -> NAME .)
+    $end            reduce using rule 17 (factor -> NAME .)
+    RPAREN          reduce using rule 17 (factor -> NAME .)
 
 
 state 8
 
-    (11) factor -> LPAREN . expression RPAREN
+    (20) factor -> LPAREN . expression RPAREN
     (1) expression -> . term PLUS term
     (2) expression -> . term MINUS term
-    (3) expression -> . term
-    (4) term -> . factor TIMES factor
-    (5) term -> . factor DIVIDE factor
-    (6) term -> . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (3) expression -> . term TIMES term
+    (4) expression -> . term DIVIDE term
+    (5) expression -> . term LT term
+    (6) expression -> . term GT term
+    (7) expression -> . term LE term
+    (8) expression -> . term GE term
+    (9) expression -> . term NE term
+    (10) expression -> . term AND term
+    (11) expression -> . term OR term
+    (12) expression -> . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
     NUMBER          shift and go to state 6
     NAME            shift and go to state 7
     PLUS            shift and go to state 3
     MINUS           shift and go to state 4
     LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
-    expression                     shift and go to state 15
+    expression                     shift and go to state 27
     term                           shift and go to state 2
     factor                         shift and go to state 5
 
 state 9
 
-    (1) expression -> term PLUS . term
-    (4) term -> . factor TIMES factor
-    (5) term -> . factor DIVIDE factor
-    (6) term -> . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (21) factor -> CADEIA_CAR .
 
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 7
-    PLUS            shift and go to state 3
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 8
+    TIMES           reduce using rule 21 (factor -> CADEIA_CAR .)
+    DIVIDE          reduce using rule 21 (factor -> CADEIA_CAR .)
+    PLUS            reduce using rule 21 (factor -> CADEIA_CAR .)
+    MINUS           reduce using rule 21 (factor -> CADEIA_CAR .)
+    LT              reduce using rule 21 (factor -> CADEIA_CAR .)
+    GT              reduce using rule 21 (factor -> CADEIA_CAR .)
+    LE              reduce using rule 21 (factor -> CADEIA_CAR .)
+    GE              reduce using rule 21 (factor -> CADEIA_CAR .)
+    NE              reduce using rule 21 (factor -> CADEIA_CAR .)
+    AND             reduce using rule 21 (factor -> CADEIA_CAR .)
+    OR              reduce using rule 21 (factor -> CADEIA_CAR .)
+    $end            reduce using rule 21 (factor -> CADEIA_CAR .)
+    RPAREN          reduce using rule 21 (factor -> CADEIA_CAR .)
 
-    term                           shift and go to state 16
-    factor                         shift and go to state 5
 
 state 10
 
-    (2) expression -> term MINUS . term
-    (4) term -> . factor TIMES factor
-    (5) term -> . factor DIVIDE factor
-    (6) term -> . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (22) factor -> EQUALS .
 
-    NUMBER          shift and go to state 6
-    NAME            shift and go to state 7
-    PLUS            shift and go to state 3
-    MINUS           shift and go to state 4
-    LPAREN          shift and go to state 8
+    TIMES           reduce using rule 22 (factor -> EQUALS .)
+    DIVIDE          reduce using rule 22 (factor -> EQUALS .)
+    PLUS            reduce using rule 22 (factor -> EQUALS .)
+    MINUS           reduce using rule 22 (factor -> EQUALS .)
+    LT              reduce using rule 22 (factor -> EQUALS .)
+    GT              reduce using rule 22 (factor -> EQUALS .)
+    LE              reduce using rule 22 (factor -> EQUALS .)
+    GE              reduce using rule 22 (factor -> EQUALS .)
+    NE              reduce using rule 22 (factor -> EQUALS .)
+    AND             reduce using rule 22 (factor -> EQUALS .)
+    OR              reduce using rule 22 (factor -> EQUALS .)
+    $end            reduce using rule 22 (factor -> EQUALS .)
+    RPAREN          reduce using rule 22 (factor -> EQUALS .)
 
-    term                           shift and go to state 17
-    factor                         shift and go to state 5
 
 state 11
 
-    (9) factor -> PLUS factor .
+    (23) factor -> TIPO .
 
-    TIMES           reduce using rule 9 (factor -> PLUS factor .)
-    DIVIDE          reduce using rule 9 (factor -> PLUS factor .)
-    PLUS            reduce using rule 9 (factor -> PLUS factor .)
-    MINUS           reduce using rule 9 (factor -> PLUS factor .)
-    $end            reduce using rule 9 (factor -> PLUS factor .)
-    RPAREN          reduce using rule 9 (factor -> PLUS factor .)
+    TIMES           reduce using rule 23 (factor -> TIPO .)
+    DIVIDE          reduce using rule 23 (factor -> TIPO .)
+    PLUS            reduce using rule 23 (factor -> TIPO .)
+    MINUS           reduce using rule 23 (factor -> TIPO .)
+    LT              reduce using rule 23 (factor -> TIPO .)
+    GT              reduce using rule 23 (factor -> TIPO .)
+    LE              reduce using rule 23 (factor -> TIPO .)
+    GE              reduce using rule 23 (factor -> TIPO .)
+    NE              reduce using rule 23 (factor -> TIPO .)
+    AND             reduce using rule 23 (factor -> TIPO .)
+    OR              reduce using rule 23 (factor -> TIPO .)
+    $end            reduce using rule 23 (factor -> TIPO .)
+    RPAREN          reduce using rule 23 (factor -> TIPO .)
 
 
 state 12
 
-    (10) factor -> MINUS factor .
+    (1) expression -> term PLUS . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
-    TIMES           reduce using rule 10 (factor -> MINUS factor .)
-    DIVIDE          reduce using rule 10 (factor -> MINUS factor .)
-    PLUS            reduce using rule 10 (factor -> MINUS factor .)
-    MINUS           reduce using rule 10 (factor -> MINUS factor .)
-    $end            reduce using rule 10 (factor -> MINUS factor .)
-    RPAREN          reduce using rule 10 (factor -> MINUS factor .)
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
+    term                           shift and go to state 28
+    factor                         shift and go to state 5
 
 state 13
 
-    (4) term -> factor TIMES . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (2) expression -> term MINUS . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
     NUMBER          shift and go to state 6
     NAME            shift and go to state 7
     PLUS            shift and go to state 3
     MINUS           shift and go to state 4
     LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
-    factor                         shift and go to state 18
+    term                           shift and go to state 29
+    factor                         shift and go to state 5
 
 state 14
 
-    (5) term -> factor DIVIDE . factor
-    (7) factor -> . NUMBER
-    (8) factor -> . NAME
-    (9) factor -> . PLUS factor
-    (10) factor -> . MINUS factor
-    (11) factor -> . LPAREN expression RPAREN
+    (3) expression -> term TIMES . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
     NUMBER          shift and go to state 6
     NAME            shift and go to state 7
     PLUS            shift and go to state 3
     MINUS           shift and go to state 4
     LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
-    factor                         shift and go to state 19
+    term                           shift and go to state 30
+    factor                         shift and go to state 5
 
 state 15
 
-    (11) factor -> LPAREN expression . RPAREN
+    (4) expression -> term DIVIDE . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
 
-    RPAREN          shift and go to state 20
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
 
+    term                           shift and go to state 31
+    factor                         shift and go to state 5
 
 state 16
+
+    (5) expression -> term LT . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 32
+    factor                         shift and go to state 5
+
+state 17
+
+    (6) expression -> term GT . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 33
+    factor                         shift and go to state 5
+
+state 18
+
+    (7) expression -> term LE . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 34
+    factor                         shift and go to state 5
+
+state 19
+
+    (8) expression -> term GE . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 35
+    factor                         shift and go to state 5
+
+state 20
+
+    (9) expression -> term NE . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 36
+    factor                         shift and go to state 5
+
+state 21
+
+    (10) expression -> term AND . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 37
+    factor                         shift and go to state 5
+
+state 22
+
+    (11) expression -> term OR . term
+    (13) term -> . factor TIMES factor
+    (14) term -> . factor DIVIDE factor
+    (15) term -> . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    term                           shift and go to state 38
+    factor                         shift and go to state 5
+
+state 23
+
+    (18) factor -> PLUS factor .
+
+    TIMES           reduce using rule 18 (factor -> PLUS factor .)
+    DIVIDE          reduce using rule 18 (factor -> PLUS factor .)
+    PLUS            reduce using rule 18 (factor -> PLUS factor .)
+    MINUS           reduce using rule 18 (factor -> PLUS factor .)
+    LT              reduce using rule 18 (factor -> PLUS factor .)
+    GT              reduce using rule 18 (factor -> PLUS factor .)
+    LE              reduce using rule 18 (factor -> PLUS factor .)
+    GE              reduce using rule 18 (factor -> PLUS factor .)
+    NE              reduce using rule 18 (factor -> PLUS factor .)
+    AND             reduce using rule 18 (factor -> PLUS factor .)
+    OR              reduce using rule 18 (factor -> PLUS factor .)
+    $end            reduce using rule 18 (factor -> PLUS factor .)
+    RPAREN          reduce using rule 18 (factor -> PLUS factor .)
+
+
+state 24
+
+    (19) factor -> MINUS factor .
+
+    TIMES           reduce using rule 19 (factor -> MINUS factor .)
+    DIVIDE          reduce using rule 19 (factor -> MINUS factor .)
+    PLUS            reduce using rule 19 (factor -> MINUS factor .)
+    MINUS           reduce using rule 19 (factor -> MINUS factor .)
+    LT              reduce using rule 19 (factor -> MINUS factor .)
+    GT              reduce using rule 19 (factor -> MINUS factor .)
+    LE              reduce using rule 19 (factor -> MINUS factor .)
+    GE              reduce using rule 19 (factor -> MINUS factor .)
+    NE              reduce using rule 19 (factor -> MINUS factor .)
+    AND             reduce using rule 19 (factor -> MINUS factor .)
+    OR              reduce using rule 19 (factor -> MINUS factor .)
+    $end            reduce using rule 19 (factor -> MINUS factor .)
+    RPAREN          reduce using rule 19 (factor -> MINUS factor .)
+
+
+state 25
+
+    (13) term -> factor TIMES . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    factor                         shift and go to state 39
+
+state 26
+
+    (14) term -> factor DIVIDE . factor
+    (16) factor -> . NUMBER
+    (17) factor -> . NAME
+    (18) factor -> . PLUS factor
+    (19) factor -> . MINUS factor
+    (20) factor -> . LPAREN expression RPAREN
+    (21) factor -> . CADEIA_CAR
+    (22) factor -> . EQUALS
+    (23) factor -> . TIPO
+
+    NUMBER          shift and go to state 6
+    NAME            shift and go to state 7
+    PLUS            shift and go to state 3
+    MINUS           shift and go to state 4
+    LPAREN          shift and go to state 8
+    CADEIA_CAR      shift and go to state 9
+    EQUALS          shift and go to state 10
+    TIPO            shift and go to state 11
+
+    factor                         shift and go to state 40
+
+state 27
+
+    (20) factor -> LPAREN expression . RPAREN
+
+    RPAREN          shift and go to state 41
+
+
+state 28
 
     (1) expression -> term PLUS term .
 
@@ -290,7 +761,7 @@ state 16
     RPAREN          reduce using rule 1 (expression -> term PLUS term .)
 
 
-state 17
+state 29
 
     (2) expression -> term MINUS term .
 
@@ -298,34 +769,136 @@ state 17
     RPAREN          reduce using rule 2 (expression -> term MINUS term .)
 
 
-state 18
+state 30
 
-    (4) term -> factor TIMES factor .
+    (3) expression -> term TIMES term .
 
-    PLUS            reduce using rule 4 (term -> factor TIMES factor .)
-    MINUS           reduce using rule 4 (term -> factor TIMES factor .)
-    $end            reduce using rule 4 (term -> factor TIMES factor .)
-    RPAREN          reduce using rule 4 (term -> factor TIMES factor .)
+    $end            reduce using rule 3 (expression -> term TIMES term .)
+    RPAREN          reduce using rule 3 (expression -> term TIMES term .)
 
 
-state 19
+state 31
 
-    (5) term -> factor DIVIDE factor .
+    (4) expression -> term DIVIDE term .
 
-    PLUS            reduce using rule 5 (term -> factor DIVIDE factor .)
-    MINUS           reduce using rule 5 (term -> factor DIVIDE factor .)
-    $end            reduce using rule 5 (term -> factor DIVIDE factor .)
-    RPAREN          reduce using rule 5 (term -> factor DIVIDE factor .)
+    $end            reduce using rule 4 (expression -> term DIVIDE term .)
+    RPAREN          reduce using rule 4 (expression -> term DIVIDE term .)
 
 
-state 20
+state 32
 
-    (11) factor -> LPAREN expression RPAREN .
+    (5) expression -> term LT term .
 
-    TIMES           reduce using rule 11 (factor -> LPAREN expression RPAREN .)
-    DIVIDE          reduce using rule 11 (factor -> LPAREN expression RPAREN .)
-    PLUS            reduce using rule 11 (factor -> LPAREN expression RPAREN .)
-    MINUS           reduce using rule 11 (factor -> LPAREN expression RPAREN .)
-    $end            reduce using rule 11 (factor -> LPAREN expression RPAREN .)
-    RPAREN          reduce using rule 11 (factor -> LPAREN expression RPAREN .)
+    $end            reduce using rule 5 (expression -> term LT term .)
+    RPAREN          reduce using rule 5 (expression -> term LT term .)
 
+
+state 33
+
+    (6) expression -> term GT term .
+
+    $end            reduce using rule 6 (expression -> term GT term .)
+    RPAREN          reduce using rule 6 (expression -> term GT term .)
+
+
+state 34
+
+    (7) expression -> term LE term .
+
+    $end            reduce using rule 7 (expression -> term LE term .)
+    RPAREN          reduce using rule 7 (expression -> term LE term .)
+
+
+state 35
+
+    (8) expression -> term GE term .
+
+    $end            reduce using rule 8 (expression -> term GE term .)
+    RPAREN          reduce using rule 8 (expression -> term GE term .)
+
+
+state 36
+
+    (9) expression -> term NE term .
+
+    $end            reduce using rule 9 (expression -> term NE term .)
+    RPAREN          reduce using rule 9 (expression -> term NE term .)
+
+
+state 37
+
+    (10) expression -> term AND term .
+
+    $end            reduce using rule 10 (expression -> term AND term .)
+    RPAREN          reduce using rule 10 (expression -> term AND term .)
+
+
+state 38
+
+    (11) expression -> term OR term .
+
+    $end            reduce using rule 11 (expression -> term OR term .)
+    RPAREN          reduce using rule 11 (expression -> term OR term .)
+
+
+state 39
+
+    (13) term -> factor TIMES factor .
+
+    PLUS            reduce using rule 13 (term -> factor TIMES factor .)
+    MINUS           reduce using rule 13 (term -> factor TIMES factor .)
+    TIMES           reduce using rule 13 (term -> factor TIMES factor .)
+    DIVIDE          reduce using rule 13 (term -> factor TIMES factor .)
+    LT              reduce using rule 13 (term -> factor TIMES factor .)
+    GT              reduce using rule 13 (term -> factor TIMES factor .)
+    LE              reduce using rule 13 (term -> factor TIMES factor .)
+    GE              reduce using rule 13 (term -> factor TIMES factor .)
+    NE              reduce using rule 13 (term -> factor TIMES factor .)
+    AND             reduce using rule 13 (term -> factor TIMES factor .)
+    OR              reduce using rule 13 (term -> factor TIMES factor .)
+    $end            reduce using rule 13 (term -> factor TIMES factor .)
+    RPAREN          reduce using rule 13 (term -> factor TIMES factor .)
+
+
+state 40
+
+    (14) term -> factor DIVIDE factor .
+
+    PLUS            reduce using rule 14 (term -> factor DIVIDE factor .)
+    MINUS           reduce using rule 14 (term -> factor DIVIDE factor .)
+    TIMES           reduce using rule 14 (term -> factor DIVIDE factor .)
+    DIVIDE          reduce using rule 14 (term -> factor DIVIDE factor .)
+    LT              reduce using rule 14 (term -> factor DIVIDE factor .)
+    GT              reduce using rule 14 (term -> factor DIVIDE factor .)
+    LE              reduce using rule 14 (term -> factor DIVIDE factor .)
+    GE              reduce using rule 14 (term -> factor DIVIDE factor .)
+    NE              reduce using rule 14 (term -> factor DIVIDE factor .)
+    AND             reduce using rule 14 (term -> factor DIVIDE factor .)
+    OR              reduce using rule 14 (term -> factor DIVIDE factor .)
+    $end            reduce using rule 14 (term -> factor DIVIDE factor .)
+    RPAREN          reduce using rule 14 (term -> factor DIVIDE factor .)
+
+
+state 41
+
+    (20) factor -> LPAREN expression RPAREN .
+
+    TIMES           reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    DIVIDE          reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    PLUS            reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    MINUS           reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    LT              reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    GT              reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    LE              reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    GE              reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    NE              reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    AND             reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    OR              reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    $end            reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+    RPAREN          reduce using rule 20 (factor -> LPAREN expression RPAREN .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for TIMES in state 5 resolved as shift
+WARNING: shift/reduce conflict for DIVIDE in state 5 resolved as shift

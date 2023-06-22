@@ -1,4 +1,4 @@
-from lark import Lark
+from lark import Lark, UnexpectedToken, UnexpectedCharacters, UnexpectedEOF, UnexpectedInput, Token
 
 grammar = '''
     start: ifsuldeminas compiladores inicio codigos fim
@@ -10,9 +10,9 @@ grammar = '''
     codigo: (logico | relacional | expressao_interna | para | enquanto | retorno | definir_funk) | (variavel | matematica | escreva | leia | chamar_funk | condicional) PONTO_VIRG 
     variavel: tipo VAR "=" (operacao | LITERAL )
     matematica: operacao+
-    tipo: "INT" | "REAL" | "BOOLEANO" | "CADEIA_CAR"
-    operacao: INTEIRO OPER_MAT INTEIRO | varmat OPER_MAT varmat | varmat OPER_MAT INTEIRO | INTEIRO OPER_MAT varmat | REAL OPER_MAT REAL | varmat OPER_MAT REAL | REAL OPER_MAT varmat
-    varmat: VAR INTEIRO | VAR REAL
+    tipo: "INT" | "REAL" | "BOOLEANO" | "TEXTO"
+    operacao: LITERAL OPER_MAT LITERAL | varmat OPER_MAT varmat | varmat OPER_MAT LITERAL | LITERAL OPER_MAT varmat
+    varmat: VAR INTEIRO | VAR
     logico: VAR OPER_LOG VAR | VAR OPER_LOG CADEIA_CAR | VAR OPER_LOG INTEIRO | VAR OPER_LOG REAL | VAR OPER_LOG BOOLEANO
     relacional: VAR OPER_RELA VAR | VAR OPER_RELA LITERAL | LITERAL OPER_RELA VAR
     expressao_interna: ABRE_CHAV codigos FECHA_CHAV
@@ -47,23 +47,35 @@ grammar = '''
 '''
 
 input_string = '''
-IFSULDEMINAS COMPILADORES
+IFSULDEMINAS
+COMPILADORES
 INICIO
-ESCREVA("DRagon Ball");
-INT num = 10;
-PARA(INT i = 0; i < 10; i++) {
-    ESCREVA("djavam");
+
+FUNK soma(){
+    TEXTO txt = "macarrao";
+    INT a = 2;
+    INT b = 3;
+    INT soma = a + b;
 }
 
-LEIA();
+soma()
 
 FIM
 '''
+
+def errorHandling():
+    return True
 
 # Create the Lark parser
 parser = Lark(grammar, start='start')
 
 # Parse the input string
-tree = parser.parse(input_string)
-print(tree.pretty())
-print("str =", input_string)
+
+try:
+    tree = parser.parse(input_string)
+
+    print(tree.pretty())
+
+except UnexpectedCharacters as err:
+
+    print(err)

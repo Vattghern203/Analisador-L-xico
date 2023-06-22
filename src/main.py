@@ -1,211 +1,168 @@
-# -----------------------------------------------------------------------------
-# example.py
-#
-# Example of using PLY To parse the following simple grammar.
-#
-#   expression : term PLUS term
-#              | term MINUS term
-#              | term
-#
-#   term       : factor TIMES factor
-#              | factor DIVIDE factor
-#              | factor
-#
-#   factor     : NUMBER
-#              | NAME
-#              | PLUS factor
-#              | MINUS factor
-#              | LPAREN expression RPAREN
-#
-# -----------------------------------------------------------------------------
+import ply.lex as lex
+import ply.yacc as yacc
 
-from ply.lex import lex
-from ply.yacc import yacc
-
-# --- Tokenizer
-
-# All tokens must be named in advance.
-tokens = (
-    'PLUS',
-    'MINUS',
-    'TIMES',
-    'DIVIDE',
-    'LPAREN',
-    'RPAREN',
-    'NAME',
-    'NUMBER',
+# Token list
+tokens = [
+    'VAR',
+    'ID',
     'TIPO',
     'INTEIRO',
-    'REAL',
     'CADEIA_CAR',
-    'PARA',
+    'ABRE_COLCH',
+    'FECHA_COLCH',
+    'ABRE_CHAV',
+    'FECHA_CHAV',
+    'VIRG',
+    'PONTO_VIRG',
+    'ABRE_PAR',
+    'FECHA_PAR',
+    'OPER_RELA',
+    'OPER_MAT',
+    'ITERADORES',
+    'NEGACAO',
+    'OPER_LOG',
+    'NOME_FUNK',
+    'COMENTARIO',
+    'STR_INCOMPLETA',
+    'VAR_ERRO',
+    'NUM_ERRO',
+    'INT_LITERAL',
+    'STRING_LITERAL',
     'SE',
     'SENAO',
     'ENQUANTO',
-    'ESCREVA',
     'LEIA',
-    'EQUALS',
-    'COMMA',
-    'COLON',
-    'AND',
-    'OR',
-    'NOT',
-    'LT',
-    'GT',
-    'LE',
-    'GE',
-    'NE',
-)
+    'ESCREVA',
+    'PARA',
+    'FUNK',
+    'RETORNA',
+    'IFSULDEMINAS',
+    'INICIO',
+    'COMPILADORES',
+    'FIM',
+    'INT',
+    'REAL',
+    'BOOLEANO',
+    'TEXTO'
+]
+
+# Token regular expressions
+t_VAR = r'[a-zA-Z]+\d\w'
+t_INTEIRO = r'[+-]?\d+'
+t_CADEIA_CAR = r'"[^"]+"'
+t_ABRE_COLCH = r'\['
+t_FECHA_COLCH = r'\]'
+t_ABRE_CHAV = r'{'
+t_FECHA_CHAV = r'}'
+t_VIRG = r','
+t_PONTO_VIRG = r';'
+t_ABRE_PAR = r'\('
+t_FECHA_PAR = r'\)'
+t_OPER_RELA = r'==|!=|<=|>=|<|>'
+t_OPER_MAT = r'\+|-|\*|/|%'
+t_ITERADORES = r'ate|passo'
+t_NEGACAO = r'!'
+t_OPER_LOG = r'&&|\|\|'
+t_NOME_FUNK = r'[a-zA-Z]\w*\([^)]*\)'
+t_COMENTARIO = r'\#.*'
+t_STR_INCOMPLETA = r'"[^"]*'
+t_VAR_ERRO = r'\d+[a-zA-Z]+|[@!#$%&]+[a-zA-Z]+|[a-zA-Z]+\.\d+|[a-zA-Z]+[@!#$%&*]+'
+t_NUM_ERRO = r'\d+\.\d*[a-zA-Z]+|\d+\.\d+|\d+\.\d*[a-zA-Z]+'
+t_SE = r'\bse\b'
+t_SENAO = r'\bsenao\b'
+t_ENQUANTO = r'\benquanto\b'
+t_LEIA = r'\bleia\b'
+t_ESCREVA = r'\bescreva\b'
+t_PARA = r'\bpara\b'
+t_FUNK = r'\bfunk\b'
+t_RETORNA = r'\bretorna\b'
+t_IFSULDEMINAS = r'\bifsuldeminas\b'
+t_INICIO = r'\binicio\b'
+t_COMPILADORES = r'\bcompiladores\b'
+t_FIM = r'\bfim\b'
+t_INT = r'\bint\b'
+t_REAL = r'[+-]?\d+\.\d+|\d+\.\d+'
+t_BOOLEANO = r'\bbool\b'
+t_TEXTO = r'\btexto\b'
 
 # Ignored characters
 t_ignore = ' \t'
 
-# Token matching rules are written as regexs
-t_PLUS = r'\+'
-t_MINUS = r'-'
-t_TIMES = r'\*'
-t_DIVIDE = r'/'
-t_LPAREN = r'\('
-t_RPAREN = r'\)'
-t_NAME = r'[a-zA-Z_][a-zA-Z0-9_]*'
-t_TIPO = r'int|real|texto|bool'
-t_INTEIRO = r'([+-])?\d+'
-t_REAL = r'(([+-])?\d+)[.]\d+'
-t_CADEIA_CAR = r'".*?"'
-t_PARA = r'para'
-t_SE = r'se'
-t_SENAO = r'senao'
-t_ENQUANTO = r'enquanto'
-t_ESCREVA = r'escreva'
-t_LEIA = r'leia'
-t_EQUALS = r'=='
-t_COMMA = r','
-t_COLON = r':'
-t_AND = r'&&'
-t_OR = r'\|\|'
-t_NOT = r'!'
-t_LT = r'<'
-t_GT = r'>'
-t_LE = r'<='
-t_GE = r'>='
-t_NE = r'!='
-
-# A function can be used if there is an associated action.
-# Write the matching regex in the docstring.
-def t_NUMBER(t):
-    r'\d+'
-    t.value = int(t.value)
-    return t
-
-# Ignored token with an action associated with it
-def t_ignore_newline(t):
+# Newline tracking
+def t_newline(t):
     r'\n+'
     t.lexer.lineno += t.value.count('\n')
 
-# Error handler for illegal characters
+# Error handling
 def t_error(t):
-    last_newline_index = t.lexer.lexdata.rfind('\n', 0, t.lexpos)
-    line = t.lexer.lineno
-    column = t.lexpos - last_newline_index
-    print(f"Line {line}, column {column}: Illegal character {t.value[0]!r}")
+    print(f"Invalid character '{t.value[0]}' at line {t.lineno}, position {find_column(t.lexer.lexdata, t)}")
     t.lexer.skip(1)
 
-# Build the lexer object
-lexer = lex()
-    
-# --- Parser
+# Helper function to calculate column position
+def find_column(input, token):
+    line_start = input.rfind('\n', 0, token.lexpos) + 1
+    return token.lexpos - line_start + 1
 
-# Write functions for each grammar rule which is
-# specified in the docstring.
-def p_expression_binop(p):
-    '''
-    expression : term PLUS term
-               | term MINUS term
-               | term TIMES term
-               | term DIVIDE term
-               | term LT term
-               | term GT term
-               | term LE term
-               | term GE term
-               | term NE term
-               | term AND term
-               | term OR term
-    '''
-    p[0] = ('binop', p[2], p[1], p[3])
+# Build the lexer
+lexer = lex.lex()
 
+# Parsing rules
+def p_program(p):
+    '''
+    program : stmt_list
+    '''
 
-def p_expression_term(p):
+def p_stmt_list(p):
     '''
-    expression : term
+    stmt_list : stmt
+              | stmt_list stmt
     '''
-    p[0] = p[1]
 
-def p_term(p):
+def p_stmt(p):
     '''
-    term : factor TIMES factor
-         | factor DIVIDE factor
+    stmt : ID PONTO_VIRG
+         | TIPO ID INTEIRO PONTO_VIRG
+         | TIPO ID REAL PONTO_VIRG
+         | TIPO ID CADEIA_CAR PONTO_VIRG
+         | TIPO ID TEXTO PONTO_VIRG
+         | se_stmt
     '''
-    p[0] = ('binop', p[2], p[1], p[3])
 
-def p_term_factor(p):
+def p_se_stmt(p):
     '''
-    term : factor
-    '''
-    p[0] = p[1]
+    se_stmt : SE ABRE_PAR expr FECHA_PAR ABRE_CHAV stmt_list FECHA_CHAV
+        | SE ABRE_PAR expr FECHA_PAR ABRE_CHAV stmt_list FECHA_CHAV SENAO ABRE_CHAV stmt_list FECHA_CHAV
 
-def p_factor_number(p):
     '''
-    factor : NUMBER
-    '''
-    p[0] = ('number', p[1])
 
-def p_factor_name(p):
+def p_expr(p):
     '''
-    factor : NAME
+    expr : ID OPER_RELA ID
+         | expr OPER_LOG expr
+         | NEGACAO expr
     '''
-    p[0] = ('name', p[1])
-
-def p_factor_unary(p):
-    '''
-    factor : PLUS factor
-           | MINUS factor
-    '''
-    p[0] = ('unary', p[1], p[2])
-
-def p_factor_grouped(p):
-    '''
-    factor : LPAREN expression RPAREN
-    '''
-    p[0] = ('grouped', p[2])
-
-def p_factor_string(p):
-    '''
-    factor : CADEIA_CAR
-    '''
-    p[0] = ('string', p[1])
-
-def p_factor_define(p):
-    '''
-    factor : EQUALS
-    '''
-    p[0] = ('equals', p[1])
-
-def p_factor_type(p):
-    '''
-    factor : TIPO
-    '''
-    p[0] = ('type', p[1])
 
 def p_error(p):
-    line = p.lineno
-    column = p.lexpos - lexer.lexdata.rfind('\n', 0, p.lexpos)
-    print(f"Syntax error at line {line}, column {column}: {p.value!r}")
-
+    if p:
+        print(f"Syntax error at line {p.lineno}, position {find_column(p.lexer.lexdata, p)}")
+    else:
+        print("Syntax error: Unexpected end of input")
 
 # Build the parser
-parser = yacc()
+parser = yacc.yacc()
 
-# Parse an expression
-ast = parser.parse('escreva')
+# Test the parser
+data = '''
+texto nome = 'sergio';
 
-print(ast)
+leia(nome);
+
+se (nome != "Wallace"){
+    escreva("Nome incorreto, tente novamente");
+}
+senao {
+    escreva("Parabens voce acertou o nome @@@$$");
+}
+'''
+
+parser.parse(data, lexer=lexer)

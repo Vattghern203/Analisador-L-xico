@@ -7,17 +7,17 @@ grammar = '''
     inicio: "INICIO"
     fim: "FIM"
     codigos: codigo+
-    codigo: (logico | relacional | expressao_interna | para | enquanto | retorno | definir_funk) | (variavel | matematica | escreva | leia | chamar_funk | condicional) PONTO_VIRG 
+    codigo: (logico | relacional | expressao_interna | para | enquanto | retorno | definir_funk | condicional) | (variavel | matematica | escreva | leia | chamar_funk) PONTO_VIRG 
     variavel: tipo VAR "=" (operacao | LITERAL )
     matematica: operacao+
     tipo: "INT" | "REAL" | "BOOLEANO" | "TEXTO"
     operacao: LITERAL OPER_MAT LITERAL | varmat OPER_MAT varmat | varmat OPER_MAT LITERAL | LITERAL OPER_MAT varmat
     varmat: VAR INTEIRO | VAR
-    logico: VAR OPER_LOG VAR | VAR OPER_LOG CADEIA_CAR | VAR OPER_LOG INTEIRO | VAR OPER_LOG REAL | VAR OPER_LOG BOOLEANO
-    relacional: VAR OPER_RELA VAR | VAR OPER_RELA LITERAL | LITERAL OPER_RELA VAR
+    logico: VAR OPER_LOG VAR | VAR OPER_LOG CADEIA_CAR | VAR OPER_LOG LITERAL | LITERAL OPER_LOG VAR | VAR OPER_LOG BOOLEANO
+    relacional: VAR OPER_RELA VAR | VAR OPER_RELA LITERAL | LITERAL OPER_RELA VAR | LITERAL OPER_RELA LITERAL
     expressao_interna: ABRE_CHAV codigos FECHA_CHAV
     para: "PARA" ABRE_PAR (VAR "=" LITERAL | variavel) PONTO_VIRG relacional PONTO_VIRG VAR ITERADORES FECHA_PAR expressao_interna
-    condicional: "SE" ABRE_PAR relacional FECHA_PAR expressao_interna | "SE" ABRE_PAR logico FECHA_PAR expressao_interna | "SE" ABRE_PAR relacional FECHA_PAR expressao_interna "SENAO" expressao_interna | "SE" ABRE_PAR logico FECHA_PAR expressao_interna "SENAO" expressao_interna
+    condicional: "SE" ABRE_PAR relacional FECHA_PAR expressao_interna | "SE" ABRE_PAR logico relacional FECHA_PAR expressao_interna | "SE" ABRE_PAR relacional FECHA_PAR expressao_interna "SENAO" expressao_interna | "SE" ABRE_PAR logico FECHA_PAR expressao_interna "SENAO" expressao_interna
     enquanto: "ENQUANTO" ABRE_PAR relacional FECHA_PAR expressao_interna | "ENQUANTO" ABRE_PAR BOOLEANO FECHA_PAR expressao_interna
     retorno: "RETORNO" ABRE_PAR VAR FECHA_PAR | "RETORNO" INTEIRO
     definir_funk: "FUNK" NOME_FUNK "(" ")" expressao_interna
@@ -47,20 +47,6 @@ grammar = '''
 '''
 
 input_string = '''
-IFSULDEMINAS
-COMPILADORES
-INICIO
-
-FUNK soma(){
-    TEXTO txt = "macarrao";
-    INT a = 2;
-    INT b = 3;
-    INT soma = a + b;
-}
-
-soma()
-
-FIM
 '''
 
 def errorHandling():

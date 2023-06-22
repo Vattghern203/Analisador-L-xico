@@ -16,7 +16,7 @@ grammar = '''
     logico: VAR OPER_LOG VAR | VAR OPER_LOG CADEIA_CAR | VAR OPER_LOG INTEIRO | VAR OPER_LOG REAL | VAR OPER_LOG BOOLEANO
     relacional: VAR OPER_RELA VAR | VAR OPER_RELA LITERAL | LITERAL OPER_RELA VAR
     expressao_interna: ABRE_CHAV codigos FECHA_CHAV
-    para: "PARA" ABRE_PAR (VAR "=" LITERAL) PONTO_VIRG relacional PONTO_VIRG VAR ITERADORES FECHA_PAR expressao_interna
+    para: "PARA" ABRE_PAR (VAR "=" LITERAL | variavel) PONTO_VIRG relacional PONTO_VIRG VAR ITERADORES FECHA_PAR expressao_interna
     condicional: "SE" ABRE_PAR relacional FECHA_PAR expressao_interna | "SE" ABRE_PAR logico FECHA_PAR expressao_interna | "SE" ABRE_PAR relacional FECHA_PAR expressao_interna "SENAO" expressao_interna | "SE" ABRE_PAR logico FECHA_PAR expressao_interna "SENAO" expressao_interna
     enquanto: "ENQUANTO" ABRE_PAR relacional FECHA_PAR expressao_interna | "ENQUANTO" ABRE_PAR BOOLEANO FECHA_PAR expressao_interna
     retorno: "RETORNO" ABRE_PAR VAR FECHA_PAR | "RETORNO" INTEIRO
@@ -51,9 +51,12 @@ IFSULDEMINAS COMPILADORES
 INICIO
 ESCREVA("DRagon Ball");
 INT num = 10;
-PARA(i = 0; i < 10; i++) {
+PARA(INT i = 0; i < 10; i++) {
     ESCREVA("djavam");
 }
+
+LEIA();
+
 FIM
 '''
 

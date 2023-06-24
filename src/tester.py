@@ -43,9 +43,17 @@ grammar = '''
     
     retorno: "RETORNO" (VAR | LITERAL | chamar_funk )
     
-    definir_funk: "FUNK" NOME_FUNK ( "(" ")" | "(" VAR ")" ) expressao_interna
+    definir_funk: "FUNK" NOME_FUNK ABRE_PAR parametros? FECHA_PAR expressao_interna
     
-    chamar_funk: NOME_FUNK ( "(" ")" | "(" VAR | LITERAL | chamar_funk | arg ")")
+    parametros: parametro ("," parametro)*
+    
+    parametro: tipo VAR
+
+    args: arg ("," arg)*
+
+    arg: VAR | LITERAL
+
+    chamar_funk: NOME_FUNK ABRE_PAR args? FECHA_PAR
     
     escreva: "ESCREVA" ABRE_PAR CADEIA_CAR FECHA_PAR 
             | "ESCREVA" ABRE_PAR (CADEIA_CAR | VAR) FECHA_PAR 
@@ -60,10 +68,6 @@ grammar = '''
     LITERAL: INTEIRO | REAL | CADEIA_CAR
     
     reatribuir: VAR "=" ((LITERAL | VAR) OPER_MAT (LITERAL | VAR)) | LITERAL | VAR | chamar_funk
-    
-    parameter: VAR | VAR "," parameter+
-    
-    arg: parameter | LITERAL | arg+
     
     ABRE_PAR: "("
     FECHA_PAR: ")"
@@ -91,8 +95,8 @@ COMPILADORES
 
 INICIO
 
-FUNK fatorial(n) {
-    INT f = fatorial();
+FUNK fatorial(INT n, TEXTO s) {
+    INT f = fatorial(5, 10);
     INT resultado = 1;
     INT i = 0;
     PARA(i = 1; i <= n; i++){
@@ -113,20 +117,22 @@ FIM
 '''
 
 
-def errorHandling():
-    return True
-
-
-# Create the Lark parser
 parser = Lark(grammar, start='start')
 
 # Parse the input string
-
 try:
     tree = parser.parse(input_string)
-
+    # Parsing successful, continue with further processing of the parse tree
     print(tree.pretty())
 
 except UnexpectedCharacters as err:
+    # Handle UnexpectedCharacters error
+    print(f"Unexpected characters encountered: {err}")
 
-    print(err)
+except UnexpectedEOF as err:
+    # Handle UnexpectedEOF error
+    print("Unexpected end of input")
+
+except Exception as err:
+    # Handle other parsing errors
+    print(f"An error occurred during parsing: {err}")

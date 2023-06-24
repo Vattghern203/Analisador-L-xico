@@ -7,8 +7,8 @@ grammar = '''
     inicio: "INICIO"
     fim: "FIM"
     codigos: codigo+
-    codigo: (logico | relacional | expressao_interna | para | enquanto | definir_funk | condicional) | (variavel | matematica | escreva | leia | chamar_funk | retorno | reatribuir) PONTO_VIRG 
-    variavel: tipo VAR "=" (operacao | LITERAL | VAR )
+    codigo: (logico | relacional | expressao_interna | para | enquanto | definir_funk | condicional ) | (variavel | matematica | escreva | leia | chamar_funk | retorno | reatribuir) PONTO_VIRG 
+    variavel: tipo VAR "=" (operacao | LITERAL | VAR | chamar_funk )
     matematica: operacao+
     tipo: "INT" | "REAL" | "BOOLEANO" | "TEXTO"
     operacao: LITERAL OPER_MAT LITERAL | varmat OPER_MAT varmat | varmat OPER_MAT LITERAL | LITERAL OPER_MAT varmat
@@ -20,12 +20,14 @@ grammar = '''
     condicional: "SE" ABRE_PAR relacional FECHA_PAR expressao_interna | "SE" ABRE_PAR logico relacional FECHA_PAR expressao_interna | "SE" ABRE_PAR relacional FECHA_PAR expressao_interna "SENAO" expressao_interna | "SE" ABRE_PAR logico FECHA_PAR expressao_interna "SENAO" expressao_interna
     enquanto: "ENQUANTO" ABRE_PAR relacional FECHA_PAR expressao_interna | "ENQUANTO" ABRE_PAR BOOLEANO FECHA_PAR expressao_interna
     retorno: "RETORNO" (VAR | LITERAL | chamar_funk )
-    definir_funk: "FUNK" NOME_FUNK "(" VAR |  ")" expressao_interna
-    chamar_funk: NOME_FUNK "(" ")"
+    definir_funk: "FUNK" NOME_FUNK ( "(" ")" | "(" VAR ")" ) expressao_interna
+    chamar_funk: NOME_FUNK ( "(" ")" | "(" VAR | LITERAL | chamar_funk | arg ")")
     escreva: "ESCREVA" ABRE_PAR CADEIA_CAR FECHA_PAR | "ESCREVA" ABRE_PAR (CADEIA_CAR | VAR) FECHA_PAR | "ESCREVA" ABRE_PAR VAR FECHA_PAR | "ESCREVA" ABRE_PAR CADEIA_CAR INTEIRO FECHA_PAR | "ESCREVA" ABRE_PAR INTEIRO FECHA_PAR | "ESCREVA" ABRE_PAR CADEIA_CAR REAL FECHA_PAR | "ESCREVA" ABRE_PAR REAL FECHA_PAR
     leia: "LEIA" ABRE_PAR VAR FECHA_PAR
     LITERAL: INTEIRO | REAL | CADEIA_CAR
-    reatribuir: VAR "=" ((LITERAL | VAR) OPER_MAT (LITERAL | VAR)) | LITERAL | VAR
+    reatribuir: VAR "=" ((LITERAL | VAR) OPER_MAT (LITERAL | VAR)) | LITERAL | VAR | chamar_funk
+    parameter: VAR | VAR "," parameter
+    arg: (VAR | LITERAL ) | arg "," arg
 
     ABRE_PAR: "("
     FECHA_PAR: ")"
@@ -53,14 +55,23 @@ COMPILADORES
 
 INICIO
 
-FUNK fatorial(n){
-	INT resultado = 1;
-	INT i = 10;
-	PARA(i = 1; i <= n; i++){
-		resultado = resultado * i;
-	}
-		RETORNO resultado;
+FUNK fatorial(n) {
+    INT f = fatorial(n);
+    INT resultado = 1;
+    INT i = 0;
+    PARA(i = 1; i <= n; i++){
+        resultado = resultado * i;
+    }
+    SE(resultado > 100){
+        ESCREVA("O resultado é maior que 100.");
+    }
+    SENAO{
+        ESCREVA("O resultado é menor ou igual a 100.");
+    }
+    RETORNO resultado;
 }
+
+
 
 FIM
 '''

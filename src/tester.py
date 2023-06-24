@@ -2,11 +2,17 @@ from lark import Lark, UnexpectedToken, UnexpectedCharacters, UnexpectedEOF, Une
 
 grammar = '''
     start: ifsuldeminas compiladores inicio codigos fim
+
     ifsuldeminas: "IFSULDEMINAS"
+
     compiladores: "COMPILADORES"
+
     inicio: "INICIO"
+
     fim: "FIM"
+    
     codigos: codigo+
+
     codigo: (logico | relacional | expressao_interna | para | enquanto | definir_funk | condicional ) | (variavel | matematica | escreva | leia | chamar_funk | retorno | reatribuir) PONTO_VIRG 
     variavel: tipo VAR "=" (operacao | LITERAL | VAR | chamar_funk )
     matematica: operacao+
@@ -26,8 +32,8 @@ grammar = '''
     leia: "LEIA" ABRE_PAR VAR FECHA_PAR
     LITERAL: INTEIRO | REAL | CADEIA_CAR
     reatribuir: VAR "=" ((LITERAL | VAR) OPER_MAT (LITERAL | VAR)) | LITERAL | VAR | chamar_funk
-    parameter: VAR | VAR "," parameter
-    arg: (VAR | LITERAL ) | arg "," arg
+    parameter: VAR | VAR "," parameter+
+    arg: parameter | LITERAL | arg+
 
     ABRE_PAR: "("
     FECHA_PAR: ")"
@@ -56,7 +62,7 @@ COMPILADORES
 INICIO
 
 FUNK fatorial(n) {
-    INT f = fatorial(n);
+    INT f = fatorial();
     INT resultado = 1;
     INT i = 0;
     PARA(i = 1; i <= n; i++){
@@ -76,8 +82,10 @@ FUNK fatorial(n) {
 FIM
 '''
 
+
 def errorHandling():
     return True
+
 
 # Create the Lark parser
 parser = Lark(grammar, start='start')

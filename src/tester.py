@@ -108,10 +108,9 @@ FUNK fatorial(INT n, TEXTO s) {
     SENAO{
         ESCREVA("O resultado é menor ou igual a 100.");
     }
+
     RETORNO resultado;
 }
-
-
 
 FIM
 '''
@@ -132,6 +131,10 @@ except UnexpectedCharacters as err:
 except UnexpectedEOF as err:
     # Handle UnexpectedEOF error
     print("Unexpected end of input")
+
+except UnexpectedToken as err:
+
+    print(f"Unexpected Token: {err} ")
 
 except Exception as err:
     # Handle other parsing errors
